@@ -35,7 +35,7 @@ public class JsonSerializer implements Serializer {
     /**
      * 由于 Object 的原始对象会被擦除，导致反序列化时会被作为 LinkedHashMap 无法转换成原始对象，因此这里做了特殊处理
      *
-     * @param rpcRequest rpc 请求
+     * @param rpcRequest META-INF 请求
      * @param type       类型
      * @return {@link T}
      * @throws IOException IO异常
@@ -59,7 +59,7 @@ public class JsonSerializer implements Serializer {
     /**
      * 由于 Object 的原始对象会被擦除，导致反序列化时会被作为 LinkedHashMap 无法转换成原始对象，因此这里做了特殊处理
      *
-     * @param rpcResponse rpc 响应
+     * @param rpcResponse META-INF 响应
      * @param type        类型
      * @return {@link T}
      * @throws IOException IO异常

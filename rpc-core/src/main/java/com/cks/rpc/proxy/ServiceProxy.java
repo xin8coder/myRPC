@@ -1,10 +1,16 @@
 package com.cks.rpc.proxy;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.cks.rpc.RpcApplication;
+import com.cks.rpc.config.RpcConfig;
+import com.cks.rpc.constant.RpcConstant;
 import com.cks.rpc.model.RpcRequest;
 import com.cks.rpc.model.RpcResponse;
+import com.cks.rpc.model.ServiceMetaInfo;
+import com.cks.rpc.registry.Registry;
+import com.cks.rpc.registry.RegistryFactory;
 import com.cks.rpc.serializer.JdkSerializer;
 import com.cks.rpc.serializer.Serializer;
 import com.cks.rpc.serializer.SerializerFactory;
@@ -12,6 +18,7 @@ import com.cks.rpc.serializer.SerializerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.util.List;
 
 public class ServiceProxy implements InvocationHandler {
 
@@ -27,6 +34,7 @@ public class ServiceProxy implements InvocationHandler {
         final Serializer serializer = SerializerFactory.getInstance(RpcApplication.getRpcConfig().getSerializer());
 
         // 构造请求
+        String serviceName = method.getDeclaringClass().getName();
         RpcRequest rpcRequest = RpcRequest.builder()
                 .serviceName(method.getDeclaringClass().getName())
                 .methodName(method.getName())
@@ -37,8 +45,22 @@ public class ServiceProxy implements InvocationHandler {
             // 序列化
             byte[] bodyBytes = serializer.serialize(rpcRequest);
             // 发送请求
-            // todo 注意，这里地址被硬编码了（需要使用注册中心和服务发现机制解决）
-            try (HttpResponse httpResponse = HttpRequest.post("http://localhost:8080")
+
+            RpcConfig rpcConfig = RpcApplication.getRpcConfig();
+            Registry registry = RegistryFactory.getInstance(rpcConfig.getRegistryConfig().getRegistry());
+            ServiceMetaInfo serviceMetaInfo = new ServiceMetaInfo();
+            serviceMetaInfo.setServiceName(serviceName);
+
+            serviceMetaInfo.setServiceVersion((RpcConstant.DEFAULT_SERVICE_VERSION));
+            List<ServiceMetaInfo> serviceMetaInfoList = registry.serviceDiscovery(serviceMetaInfo.getServiceKey());
+
+            if (CollUtil.isEmpty((serviceMetaInfoList))){
+                throw new RuntimeException("无服务");
+            }
+
+            ServiceMetaInfo selected = serviceMetaInfoList.get(0);
+
+            try (HttpResponse httpResponse = HttpRequest.post(selected.getServiceAddress())
                     .body(bodyBytes)
                     .execute()) {
                 byte[] result = httpResponse.bodyBytes();

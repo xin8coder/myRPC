@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * RPC 请求
+ * META-INF 请求
  *
  * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  * @learn <a href="https://codefather.cn">编程宝典</a>

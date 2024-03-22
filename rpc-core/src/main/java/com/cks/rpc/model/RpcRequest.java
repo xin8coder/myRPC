@@ -1,5 +1,6 @@
 package com.cks.rpc.model;
 
+import com.cks.rpc.constant.RpcConstant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 
 /**
- * RPC 请求
+ * META-INF 请求
  *
  * @author <a href="https://github.com/liyupi">程序员鱼皮</a>
  * @learn <a href="https://codefather.cn">编程宝典</a>
@@ -39,5 +40,8 @@ public class RpcRequest implements Serializable {
      * 参数列表
      */
     private Object[] args;
+
+
+    private String serviceVersion = RpcConstant.DEFAULT_SERVICE_VERSION;
 
 }

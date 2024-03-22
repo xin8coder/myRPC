@@ -12,10 +12,12 @@ public class RpcConfig {
 
     private String serverHost = "localhost";
 
-    private Integer serverPort = 8080;
+    private Integer serverPort = 8088;
 
     private boolean mock = false;
 
     private String serializer = SerializerKeys.JSON;
+
+    private RegistryConfig registryConfig = new RegistryConfig();
 
 }

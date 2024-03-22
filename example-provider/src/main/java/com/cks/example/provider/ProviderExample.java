@@ -11,6 +11,8 @@ import com.cks.rpc.registry.Registry;
 import com.cks.rpc.registry.RegistryFactory;
 import com.cks.rpc.server.HttpServer;
 import com.cks.rpc.server.VertxHttpServer;
+import com.cks.rpc.server.tcp.VertxTcpServer;
+import io.vertx.core.Vertx;
 
 import java.util.ArrayList;
 
@@ -44,8 +46,8 @@ public class ProviderExample {
             throw new RuntimeException(e);
         }
 
-        HttpServer httpServer = new VertxHttpServer();
-        httpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
+        VertxTcpServer vertxTcpServer = new VertxTcpServer();
+        vertxTcpServer.doStart(RpcApplication.getRpcConfig().getServerPort());
 
     }
 }

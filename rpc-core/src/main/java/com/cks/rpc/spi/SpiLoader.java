@@ -1,6 +1,10 @@
 package com.cks.rpc.spi;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import com.cks.rpc.fault.retry.RetryStrategy;
+import com.cks.rpc.fault.tolerant.TolerantStrategy;
+import com.cks.rpc.loadbalancer.LoadBalancer;
+import com.cks.rpc.registry.Registry;
 import com.cks.rpc.serializer.Serializer;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,7 +54,7 @@ public class SpiLoader {
     /**
      * 动态加载的类列表
      */
-    private static final List<Class<?>> LOAD_CLASS_LIST = Arrays.asList(Serializer.class);
+    private static final List<Class<?>> LOAD_CLASS_LIST = Arrays.asList(new Class<?>[]{Serializer.class, Registry.class, LoadBalancer.class, RetryStrategy.class, TolerantStrategy.class});
 
     /**
      * 加载所有类型
@@ -132,8 +136,8 @@ public class SpiLoader {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         loadAll();
         System.out.println(loaderMap);
-        Serializer serializer = getInstance(Serializer.class, "jdk");
-        System.out.println(serializer);
+        //Serializer serializer = getInstance(Registry.class, "jdk");
+        //System.out.println(serializer);
     }
 
 }
